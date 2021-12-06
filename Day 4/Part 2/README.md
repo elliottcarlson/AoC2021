@@ -1,4 +1,4 @@
-# [AoC 2021 - Day 4: Giant Squid - Part 2](ihttps://adventofcode.com/2021/day/4#part2)
+# [AoC 2021 - Day 4: Giant Squid - Part 2](https://adventofcode.com/2021/day/4#part2)
 
 Run
 ---
