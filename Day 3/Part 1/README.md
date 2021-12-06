@@ -1,54 +1,80 @@
-AoC 2021 - Day 3: Binary Diagnostic - Part 1
-============================================
-
-Description
------------
-
-The submarine has been making some odd creaking noises, so you ask it to produce a diagnostic report just in case.
-
-The diagnostic report (your puzzle input) consists of a list of binary numbers which, when decoded properly, can tell you many useful things about the conditions of the submarine. The first parameter to check is the **power consumption**.
-
-You need to use the binary numbers in the diagnostic report to generate two new binary numbers (called the **gamma rate** and the **epsilon rate**). The power consumption can then be found by multiplying the gamma rate by the epsilon rate.
-
-Each bit in the gamma rate can be determined by finding the **most common bit in the corresponding position** of all numbers in the diagnostic report. For example, given the following diagnostic report:
-
-```
-00100
-11110
-10110
-10111
-10101
-01111
-00111
-11100
-10000
-11001
-00010
-01010
-```
-
-Considering only the first bit of each number, there are five `0` bits and seven `1` bits. Since the most common bit is `1`, the first bit of the gamma rate is `1`.
-
-The most common second bit of the numbers in the diagnostic report is `0`, so the second bit of the gamma rate is `0`.
-
-The most common value of the third, fourth, and fifth bits are `1`, `1`, and `0`, respectively, and so the final three bits of the gamma rate are `110`.
-
-So, the gamma rate is the binary number `10110`, or **`22`** in decimal.
-
-The epsilon rate is calculated in a similar way; rather than use the most common bit, the least common bit from each position is used. So, the epsilon rate is `01001`, or **`9`** in decimal. Multiplying the gamma rate (`22`) by the epsilon rate (`9`) produces the power consumption, **`198`**.
-
-Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, then multiply them together. **What is the power consumption of the submarine?** (Be sure to represent your answer in decimal, not binary.)
+# [AoC 2021 - Day 3: Binary Diagnostic - Part 1](https://adventofcode.com/2021/day/3)
 
 Instructions
 ------------
 
 ```
-$ go run solve.go
+❯ go run solve.go
+```
+
+Build
+-----
+
+```
+❯ go build solve.go
+```
+
+Benchmark (Uncompiled)
+----------------------
+
+```
+❯ perf stat -r 10 -d go run solve.go
+...
+
+ Performance counter stats for 'go run solve.go' (10 runs):
+
+            610.08 msec task-clock                #    1.717 CPUs utilized            ( +-  1.55% )
+              2504      context-switches          #    0.004 M/sec                    ( +-  2.45% )
+                60      cpu-migrations            #    0.098 K/sec                    ( +-  4.76% )
+             19545      page-faults               #    0.032 M/sec                    ( +-  0.46% )
+         852698585      cycles                    #    1.398 GHz                      ( +-  1.86% )  (76.27%)
+         124670032      stalled-cycles-frontend   #   14.62% frontend cycles idle     ( +-  3.80% )  (76.69%)
+         109093070      stalled-cycles-backend    #   12.79% backend cycles idle      ( +-  5.33% )  (77.14%)
+         811643704      instructions              #    0.95  insn per cycle
+                                                  #    0.15  stalled cycles per insn  ( +-  0.92% )  (77.51%)
+         145970354      branches                  #  239.264 M/sec                    ( +-  1.12% )  (78.20%)
+           3733597      branch-misses             #    2.56% of all branches          ( +-  1.87% )  (77.81%)
+         316329049      L1-dcache-loads           #  518.504 M/sec                    ( +-  1.64% )  (78.18%)
+           9897186      L1-dcache-load-misses     #    3.13% of all L1-dcache accesses  ( +-  1.62% )  (77.68%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+           0.35526 +- 0.00240 seconds time elapsed  ( +-  0.68% )
+```
+
+Benchmark (Compiled)
+--------------------
+
+```
+❯ perf stat -r 10 -d ./solve
+...
+
+ Performance counter stats for './solve' (10 runs):
+
+              5.08 msec task-clock                #    1.411 CPUs utilized            ( +-  5.81% )
+                24      context-switches          #    0.005 M/sec                    ( +-  4.10% )
+                 1      cpu-migrations            #    0.157 K/sec                    ( +- 16.67% )
+               198      page-faults               #    0.039 M/sec                    ( +-  0.56% )
+           6266663      cycles                    #    1.233 GHz                      ( +- 12.63% )  (85.24%)
+           1249923      stalled-cycles-frontend   #   19.95% frontend cycles idle     ( +-  5.68% )
+            640385      stalled-cycles-backend    #   10.22% backend cycles idle      ( +- 11.60% )
+           8869192      instructions              #    1.42  insn per cycle
+                                                  #    0.14  stalled cycles per insn  ( +-  0.26% )
+           2183088      branches                  #  429.377 M/sec                    ( +-  0.23% )
+             11015      branch-misses             #    0.50% of all branches          ( +- 30.62% )
+                 0      L1-dcache-loads           #    0.000 K/sec                    (38.49%)
+     <not counted>      L1-dcache-load-misses                                         (0.00%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+          0.003605 +- 0.000176 seconds time elapsed  ( +-  4.89% )
 ```
 
 Leaderboard
 -----------
 
 Time: `00:24:12`
+
 Rank: `8428`
+
 Score: `0`

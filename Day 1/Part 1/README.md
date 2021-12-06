@@ -1,69 +1,82 @@
-AoC 2021 - Day 1: Sonar Sweep - Part 1
-======================================
+# [AoC 2021 - Day 1: Sonar Sweep - Part 1](https://adventofcode.com/2021/day/1)
 
-Description
------------
-
-You're minding your own business on a ship at sea when the overboard alarm goes off! You rush to see if you can help. Apparently, one of the Elves tripped and accidentally sent the sleigh keys flying into the ocean!
-
-Before you know it, you're inside a submarine the Elves keep ready for situations like this. It's covered in Christmas lights (because of course it is), and it even has an experimental antenna that should be able to track the keys if you can boost its signal strength high enough; there's a little meter that indicates the antenna's signal strength by displaying 0-50 **stars**.
-
-Your instincts tell you that in order to save Christmas, you'll need to get all **fifty stars** by December 25th.
-
-Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants **one star**. Good luck!
-
-As the submarine drops below the surface of the ocean, it automatically performs a sonar sweep of the nearby sea floor. On a small screen, the sonar sweep report (your puzzle input) appears: each line is a measurement of the sea floor depth as the sweep looks further and further away from the submarine.
-
-For example, suppose you had the following report:
+Run
+---
 
 ```
-199
-200
-208
-210
-200
-207
-240
-269
-260
-263
+❯ go run solve.go
 ```
 
-This report indicates that, scanning outward from the submarine, the sonar sweep found depths of `199`, `200`, `208`, `210`, and so on.
-
-The first order of business is to figure out how quickly the depth increases, just so you know what you're dealing with - you never know if the keys will get carried into deeper water by an ocean current or a fish or something.
-
-To do this, count **the number of times a depth measurement increases** from the previous measurement. (There is no measurement before the first measurement.) In the example above, the changes are as follows:
+Build
+-----
 
 ```
-199 (N/A - no previous measurement)
-200 (increased)
-208 (increased)
-210 (increased)
-200 (decreased)
-207 (increased)
-240 (increased)
-269 (increased)
-260 (decreased)
-263 (increased)
+❯ go build solve.go
 ```
 
-In this example, there are **`7`** measurements that are larger than the previous measurement.
-
-**How many measurements are larger than the previous measurement?**
-
-Instructions
-------------
+Benchmark (Uncompiled)
+----------------------
 
 ```
-$ go run solve.go
+❯ perf stat -r 10 -d go run solve.go
+...
+
+ Performance counter stats for 'go run solve.go' (10 runs):
+
+            652.53 msec task-clock                #    1.756 CPUs utilized            ( +-  4.23% )
+              2836      context-switches          #    0.004 M/sec                    ( +-  5.87% )
+                56      cpu-migrations            #    0.086 K/sec                    ( +-  5.51% )
+             19794      page-faults               #    0.030 M/sec                    ( +-  1.46% )
+         872519896      cycles                    #    1.337 GHz                      ( +-  2.54% )  (77.95%)
+         131388652      stalled-cycles-frontend   #   15.06% frontend cycles idle     ( +-  3.69% )  (78.16%)
+         102723474      stalled-cycles-backend    #   11.77% backend cycles idle      ( +-  3.33% )  (77.61%)
+         806440340      instructions              #    0.92  insn per cycle
+                                                  #    0.16  stalled cycles per insn  ( +-  2.87% )  (75.33%)
+         147952968      branches                  #  226.736 M/sec                    ( +-  2.12% )  (74.97%)
+           3935972      branch-misses             #    2.66% of all branches          ( +-  2.00% )  (76.73%)
+         316971840      L1-dcache-loads           #  485.755 M/sec                    ( +-  1.51% )  (78.43%)
+          10125624      L1-dcache-load-misses     #    3.19% of all L1-dcache accesses  ( +-  2.39% )  (79.42%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+            0.3717 +- 0.0140 seconds time elapsed  ( +-  3.78% )
+```
+
+Benchmark (Compiled)
+--------------------
+
+```
+❯ perf stat -r 10 -d ./solve
+...
+
+ Performance counter stats for './solve' (10 runs):
+
+              4.23 msec task-clock                #    1.411 CPUs utilized            ( +-  5.51% )
+                17      context-switches          #    0.004 M/sec                    ( +-  8.86% )
+                 0      cpu-migrations            #    0.094 K/sec                    ( +- 55.28% )
+               194      page-faults               #    0.046 M/sec                    ( +-  0.69% )
+           4855451      cycles                    #    1.147 GHz                      ( +- 11.28% )  (91.93%)
+           1447420      stalled-cycles-frontend   #   29.81% frontend cycles idle     ( +-  8.77% )
+            651511      stalled-cycles-backend    #   13.42% backend cycles idle      ( +-  9.67% )
+           3358331      instructions              #    0.69  insn per cycle
+                                                  #    0.43  stalled cycles per insn  ( +-  0.75% )
+            697257      branches                  #  164.654 M/sec                    ( +-  0.72% )
+              4654      branch-misses             #    0.67% of all branches          ( +- 32.14% )
+                 0      L1-dcache-loads           #    0.000 K/sec                    (30.97%)
+     <not counted>      L1-dcache-load-misses                                         (0.00%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+          0.003002 +- 0.000141 seconds time elapsed  ( +-  4.68% )
 ```
 
 Leaderboard
 -----------
 
 Time: `23:37:51`
+
 Rank: `105980`
+
 Score: `0`
 
 Bonus

@@ -1,85 +1,80 @@
-AoC 2021 - Day 4: Giant Squid - Part 1
-======================================
+# [AoC 2021 - Day 4: Giant Squid - Part 1](ihttps://adventofcode.com/2021/day/4)
 
-Description
------------
-
-You're already almost 1.5km (almost a mile) below the surface of the ocean, already so deep that you can't see any sunlight. What you **can** see, however, is a giant squid that has attached itself to the outside of your submarine.
-
-Maybe it wants to play **bingo**?
-
-Bingo is played on a set of boards each consisting of a 5x5 grid of numbers. Numbers are chosen at random, and the chosen number is **marked** on all boards on which it appears. (Numbers may not appear on all boards.) If all numbers in any row or any column of a board are marked, that board **wins**. (Diagonals don't count.)
-
-The submarine has a **bingo subsystem** to help passengers (currently, you and the giant squid) pass the time. It automatically generates a random order in which to draw numbers and a random set of boards (your puzzle input). For example:
+Run
+---
 
 ```
-7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
-
-22 13 17 11  0
- 8  2 23  4 24
-21  9 14 16  7
- 6 10  3 18  5
- 1 12 20 15 19
-
- 3 15  0  2 22
- 9 18 13 17  5
-19  8  7 25 23
-20 11 10 24  4
-14 21 16 12  6
-
-14 21 17 24  4
-10 16 15  9 19
-18  8 23 26 20
-22 11 13  6  5
- 2  0 12  3  7
+❯ go run solve.go
 ```
 
-After the first five numbers are drawn (`7`, `4`, `9`, `5`, and `11`), there are no winners, but the boards are marked as follows (shown here adjacent to each other to save space):
+Build
+-----
 
 ```
-22 13 17 **11**  0         3 15  0  2 22        14 21 17 24  **4**
- 8  2 23  **4** 24         **9** 18 13 17  **5**        10 16 15  **9** 19
-21  **9** 14 16  7        19  8  **7** 25 23        18  8 23 26 20
- 6 10  3 18  5        20 **11** 10 24  **4**        22 **11** 13  6  **5**
- 1 12 20 15 19        14 21 16 12  6         2  0 12  3  **7**
+❯ go build solve.go
 ```
 
-After the next six numbers are drawn (`17`, `23`, `2`, `0`, `14`, and `21`), there are still no winners:
+Benchmark (Uncompiled)
+----------------------
 
 ```
-22 13 **17 11  0**         3 15  **0  2** 22        **14 21 17** 24  **4**
- 8  **2 23  4** 24         **9** 18 13 **17  5**        10 16 15  **9** 19
-**21  9 14** 16  **7**        19  8  **7** 25 **23**        18  8 **23** 26 20
- 6 10  3 18  **5**        20 **11** 10 24  **4**        22 **11** 13  6  **5**
- 1 12 20 15 19        **14 21** 16 12  6         **2  0** 12  3  **7**
+❯ perf stat -r 10 -d go run solve.go
+...
+
+ Performance counter stats for 'go run solve.go' (10 runs):
+
+            649.03 msec task-clock                #    1.713 CPUs utilized            ( +-  1.34% )
+              2706      context-switches          #    0.004 M/sec                    ( +-  2.62% )
+                54      cpu-migrations            #    0.084 K/sec                    ( +-  3.75% )
+             19649      page-faults               #    0.030 M/sec                    ( +-  0.62% )
+         885903327      cycles                    #    1.365 GHz                      ( +-  1.77% )  (76.92%)
+         132597290      stalled-cycles-frontend   #   14.97% frontend cycles idle     ( +-  1.35% )  (77.97%)
+         105091619      stalled-cycles-backend    #   11.86% backend cycles idle      ( +-  2.15% )  (78.61%)
+         831145238      instructions              #    0.94  insn per cycle
+                                                  #    0.16  stalled cycles per insn  ( +-  1.67% )  (75.86%)
+         152095985      branches                  #  234.345 M/sec                    ( +-  1.52% )  (75.67%)
+           3909461      branch-misses             #    2.57% of all branches          ( +-  1.26% )  (78.08%)
+         326863687      L1-dcache-loads           #  503.622 M/sec                    ( +-  0.90% )  (79.14%)
+          10449925      L1-dcache-load-misses     #    3.20% of all L1-dcache accesses  ( +-  1.61% )  (77.26%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+           0.37888 +- 0.00399 seconds time elapsed  ( +-  1.05% )
 ```
 
-Finally, 24 is drawn:
+Benchmark (Compiled)
+--------------------
 
 ```
-22 13 **17 11  0**         3 15  **0  2** 22        **14 21 17 24  4**
- 8  **2 23  4 24**         **9** 18 13 **17  5**        10 16 15  **9** 19
-**21  9 14** 16  **7**        19  8  **7** 25 **23**        18  8 **23** 26 20
- 6 10  3 18  **5**        20 **11** 10 **24  4**        22 **11** 13  6  **5**
- 1 12 20 15 19        **14 21** 16 12  6         **2  0** 12  3  **7**
-```
+❯ perf stat -r 10 -d ./solve
+...
 
-At this point, the third board **wins** because it has at least one complete row or column of marked numbers (in this case, the entire top row is marked: **`14 21 17 24 4`**).
+ Performance counter stats for './solve' (10 runs):
 
-The **score** of the winning board can now be calculated. Start by finding the **sum of all unmarked numbers** on that board; in this case, the sum is 188. Then, multiply that sum by **the number that was just called** when the board won, `24`, to get the final score, **`188 * 24 = 4512`**.
+              7.10 msec task-clock                #    1.418 CPUs utilized            ( +-  4.16% )
+                30      context-switches          #    0.004 M/sec                    ( +-  3.72% )
+                 1      cpu-migrations            #    0.197 K/sec                    ( +- 21.82% )
+               267      page-faults               #    0.038 M/sec                    ( +-  0.89% )
+           7125046      cycles                    #    1.004 GHz                      ( +- 19.97% )  (76.09%)
+           1879875      stalled-cycles-frontend   #   26.38% frontend cycles idle     ( +-  6.45% )  (98.99%)
+           1558701      stalled-cycles-backend    #   21.88% backend cycles idle      ( +-  6.24% )
+          11380540      instructions              #    1.60  insn per cycle
+                                                  #    0.17  stalled cycles per insn  ( +-  0.19% )
+           2277722      branches                  #  320.959 M/sec                    ( +-  0.19% )
+             19095      branch-misses             #    0.84% of all branches          ( +- 22.27% )
+             95461      L1-dcache-loads           #   13.452 M/sec                    ( +-100.00% )  (51.69%)
+     <not counted>      L1-dcache-load-misses                                         (3.73%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
 
-To guarantee victory against the giant squid, figure out which board will win first. **What will your final score be if you choose that board?**
-
-Instructions
-------------
-
-```
-$ go run solve.go
+          0.005005 +- 0.000195 seconds time elapsed  ( +-  3.90% )
 ```
 
 Leaderboard
 -----------
 
 Time: `01:54:15`
+
 Rank: `9591`
+
 Score: `0`

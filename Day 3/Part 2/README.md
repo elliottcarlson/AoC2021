@@ -1,52 +1,82 @@
-AoC 2021 - Day 3: Binary Diagnostic - Part 2
-============================================
+# [AoC 2021 - Day 3: Binary Diagnostic - Part 2](https://adventofcode.com/2021/day/3#part2)
 
-Description
------------
+Save the input file as `input` in this directory.
 
-Next, you should verify the **life support rating**, which can be determined by multiplying the **oxygen generator rating** by the **CO2 scrubber rating**.
-
-Both the oxygen generator rating and the CO2 scrubber rating are values that can be found in your diagnostic report - finding them is the tricky part. Both values are located using a similar process that involves filtering out values until only one remains. Before searching for either rating value, start with the full list of binary numbers from your diagnostic report and **consider just the first bit** of those numbers. Then:
-
-- Keep only numbers selected by the **bit criteria** for the type of rating value for which you are searching. Discard numbers which do not match the bit criteria.
-- If you only have one number left, stop; this is the rating value for which you are searching.
-- Otherwise, repeat the process, considering the next bit to the right.
-
-The **bit criteria** depends on which type of rating value you want to find:
-
-- To find oxygen generator rating, determine the most common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If `0` and `1` are equally common, keep values with a **`1`** in the position being considered.
-- To find **CO2 scrubber rating**, determine the **least common** value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If `0` and `1` are equally common, keep values with a **`0`** in the position being considered.
-
-For example, to determine the **oxygen generator rating** value using the same example diagnostic report from above:
-
-- Start with all 12 numbers and consider only the first bit of each number. There are more `1` bits (7) than `0` bits (5), so keep only the 7 numbers with a `1` in the first position: `11110`, `10110`, `10111`, `10101`, `11100`, `10000`, and `11001`.
-- Then, consider the second bit of the 7 remaining numbers: there are more `0` bits (4) than `1` bits (3), so keep only the 4 numbers with a `0` in the second position: `10110`, `10111`, `10101`, and `10000`.
-- In the third position, three of the four numbers have a `1`, so keep those three: `10110`, `10111`, and `10101`.
-- In the fourth position, two of the three numbers have a `1`, so keep those two: `10110` and `10111`.
-- In the fifth position, there are an equal number of `0` bits and `1` bits (one each). So, to find the **oxygen generator rating**, keep the number with a `1` in that position: 10111.
-- As there is only one number left, stop; the oxygen generator rating is `10111`, or **`23`** in decimal.
-
-Then, to determine the **CO2 scrubber rating** value from the same example above:
-
-- Start again with all 12 numbers and consider only the first bit of each number. There are fewer `0` bits (5) than `1` bits (7), so keep only the 5 numbers with a `0` in the first position: `00100`, `01111`, `00111`, `00010`, and `01010`.
-- Then, consider the second bit of the 5 remaining numbers: there are fewer `1` bits (2) than `0` bits (3), so keep only the 2 numbers with a `1` in the second position: `01111` and `01010`.
-- In the third position, there are an equal number of `0` bits and `1` bits (one each). So, to find the **CO2 scrubber rating**, keep the number with a `0` in that position: `01010`.
-- As there is only one number left, stop; the **CO2 scrubber rating** is `01010`, or **`10`** in decimal.
-
-Finally, to find the life support rating, multiply the oxygen generator rating (`23`) by the CO2 scrubber rating (`10`) to get **`230`**.
-
-Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then multiply them together. **What is the life support rating of the submarine?** (Be sure to represent your answer in decimal, not binary.)
-
-Instructions
-------------
+Run
+---
 
 ```
-$ go run solve.go
+❯ go run solve.go
+```
+
+Build
+-----
+
+```
+❯ go build solve.go
+```
+
+Benchmark (Uncompiled)
+----------------------
+
+```
+❯ perf stat -r 10 -d go run solve.go
+...
+
+ Performance counter stats for 'go run solve.go' (10 runs):
+
+            615.97 msec task-clock                #    1.707 CPUs utilized            ( +-  2.30% )
+              2590      context-switches          #    0.004 M/sec                    ( +-  3.92% )
+                58      cpu-migrations            #    0.094 K/sec                    ( +-  4.86% )
+             19575      page-faults               #    0.032 M/sec                    ( +-  0.56% )
+         851773862      cycles                    #    1.383 GHz                      ( +-  1.85% )  (77.18%)
+         129426273      stalled-cycles-frontend   #   15.19% frontend cycles idle     ( +-  2.70% )  (78.17%)
+         104025764      stalled-cycles-backend    #   12.21% backend cycles idle      ( +-  2.92% )  (78.08%)
+         809951641      instructions              #    0.95  insn per cycle
+                                                  #    0.16  stalled cycles per insn  ( +-  1.57% )  (76.97%)
+         143501123      branches                  #  232.966 M/sec                    ( +-  1.28% )  (76.67%)
+           3804829      branch-misses             #    2.65% of all branches          ( +-  1.64% )  (77.15%)
+         311402976      L1-dcache-loads           #  505.545 M/sec                    ( +-  1.53% )  (78.23%)
+           9995009      L1-dcache-load-misses     #    3.21% of all L1-dcache accesses  ( +-  2.03% )  (77.53%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+           0.36085 +- 0.00793 seconds time elapsed  ( +-  2.20% )
+```
+
+Benchmark (Compiled)
+--------------------
+
+```
+❯ perf stat -r 10 -d ./solve
+...
+
+ Performance counter stats for './solve' (10 runs):
+
+              5.45 msec task-clock                #    1.423 CPUs utilized            ( +-  4.90% )
+                22      context-switches          #    0.004 M/sec                    ( +-  6.29% )
+                 0      cpu-migrations            #    0.092 K/sec                    ( +- 44.72% )
+               245      page-faults               #    0.045 M/sec                    ( +-  0.06% )
+           6588459      cycles                    #    1.208 GHz                      ( +- 12.85% )  (92.67%)
+           1594737      stalled-cycles-frontend   #   24.21% frontend cycles idle     ( +-  6.95% )
+           1070436      stalled-cycles-backend    #   16.25% backend cycles idle      ( +-  5.02% )
+           6824637      instructions              #    1.04  insn per cycle
+                                                  #    0.23  stalled cycles per insn  ( +-  0.38% )
+           1461662      branches                  #  268.090 M/sec                    ( +-  0.34% )
+             10132      branch-misses             #    0.69% of all branches          ( +- 33.93% )
+                 0      L1-dcache-loads           #    0.000 K/sec                    (28.56%)
+     <not counted>      L1-dcache-load-misses                                         (0.00%)
+   <not supported>      LLC-loads
+   <not supported>      LLC-load-misses
+
+          0.003831 +- 0.000158 seconds time elapsed  ( +-  4.13% )
 ```
 
 Leaderboard
 -----------
 
 Time: `00:50:56`
+
 Rank: `5519`
+
 Score: `0`
