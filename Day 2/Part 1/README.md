@@ -1,5 +1,4 @@
 # [AoC 2021 - Day 2: Dive! - Part 1](https://adventofcode.com/2021/day/2)
-================================
 
 Run
 ---
