@@ -1,7 +1,7 @@
 # [AoC 2021 - Day 3: Binary Diagnostic - Part 1](https://adventofcode.com/2021/day/3)
 
-Instructions
-------------
+Run
+---
 
 ```
 ❯ go run solve.go
